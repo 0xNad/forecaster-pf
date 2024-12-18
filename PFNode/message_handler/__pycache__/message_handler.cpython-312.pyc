@@ -1,0 +1,153 @@
+Ë
+    ‰5ag»  ã                   ó  — d dl Z d dlmZ d dlmZmZ d dlm Z  d dlm	Z	 d dl
+m
+Z
+ d dlZd d l
+mZ d dlmZ d	e j"                  d
+<   d
+Z ed¬
+«      Zdededefd„Zdedee   fd„Zdedefd„Zdee
+   fd„Zdedefd„Zdedefd„Zy)é    N)Ú
+ChatOpenAI)ÚHumanMessageÚ
+SystemMessage)Ú
+Polymarket)ÚGammaMarketClient)ÚPolymarketEvent)Úliteral_eval)ÚListz¤OPENAI_API_KEYu§  You are a specialized assistant designed to be an AI-driven Polymarket guide.
+    Your primary goals are to:
+- Analyze user preferences, market trends, and historical data to suggest personalized trading opportunities.
+- Use relevant data (e.g., social sentiment, trading volume, news) to assess market sentiment.
+- Summarize sentiment trends and explain their potential impact on market outcomes.
+- Provide clear, data-driven insights and strategies to help users make informed trading decisions.
+- Avoid generic or vague adviceâ€”focus on concrete, actionable recommendations.
+
+Given the information about market, answer the user's question.
+
+Market information:
+{market_info}
+z
+gpt-4o-mini)ÚmodelÚ
+user_inputÚ
+market_infoÚreturnc                 óÂ   — t        t        j                  t         j                  |d¬«      ¬«      «      t
+        | «      g}t        j                  |«      }|j                  S )Né   ©Úindent)r   )	r   Ú
+SYSTEM_PROMPTÚformatÚjsonÚdumpsr   r   ÚinvokeÚ content)r
+   r   ÚmessagesÚanswers       ú,c:\PFNode\message_handler\message_handler.pyÚresponser      sM   € ä”m×*Ñ*´t·z±zÀ+ĞVWÔ7XĞ*ÓYÓZÜZÓ ğ€Hô \‰\˜(Ó
+#€FØ
+>‰>Ğó    Ú	analyticsc                 óÀ   — t        j                  |d¬«      }d|› d}t        |«       t         |«      t	        | «      g}t
+        j
+                  |«      }|j                  S )Nr   r   uĞ  You are a specialized assistant designed to be an AI-driven Polymarket guide.
+    Your primary goals are to:
+- Analyze user preferences, market trends, and historical data to suggest personalized trading opportunities.
+- Use relevant data (e.g., social sentiment, trading volume, news) to assess market sentiment.
+- Summarize sentiment trends and explain their potential impact on market outcomes.
+- Provide clear, data-driven insights and strategies to help users make informed trading decisions.
+- Avoid generic or vague adviceâ€”focus on concrete, actionable recommendations.
+
+    Given the summary information about each market inside event and about event, answer the user's question.
+
+    Markets information:
+    Ú
+)r   r   Úprintr   r   r   r   r   )r
+   r   ÚinfoÚ
+system_promptr   r   s         r   Ú
+conclusionr%   &   se   € ä
+:‰:i¨Ô
+*€Dğ
+ğ 
+€Fğ 
+ğ€Mô 
+ˆ-ÔämÓ$ÜZÓ ğ€Hô \‰\˜(Ó
+#€FØ
+>‰>Ğr   c                  óŒ  — t        «       }t        «       }g }|D ]4  }|j                  |j                   d«      |j                   d«      dœ«       Œ6 t	        dt
+        j                  |d¬«      › d «      t        | «      g}t        j                  |«      }t        |j                  «      j                   d«      } t        d| «       | S )	NÚidÚtitle)r'   Únamezğ
+Given the user input, return ONLY ID of the most relevant market from the list below.
+If there is no market related to question, return id equals to 0.
+Give your response in JSON format, e.g. {'id': '123456'}, {'id': '0'}
+List of markets: r   r   r!   zrelevant id found: )
+r    Úget_all_current_eventsÚappendÚgetr   r   r   r   r   r   r	   r   r"   )r
+   ÚgmÚeventsÚevents_cleanÚeventr   r   r'   s           r   Úget_relevant_eventr1   ?   s»   € Ü	Ó	€Bä
+#Ó
+%€FØ€LÛˆà×Ñ %§)¡)¨D£/¸¿¹À7Ó9KÑLÕMğ ô
+ 	ğ ô —*‘*˜\°!Ô4Ğ5ğ 6ğ	ó 	ô 	ZÓ ğ€Hô \‰\˜(Ó
+#€FÜ	f—n‘nÓ	%×	)Ñ	)¨$Ó	/€BÜ	Ğ
+ Ô$Ø
+
+€Ir   c                  óÜ   — t        «       } d}d}d}g }|rBddd||dœ}| j                  |«      }|j                  |«       t         |«      |k  rd}||z   }|rŒBt	        dt         |«      «       |S ) NTéd   r   F)ÚactiveÚclosedÚarchivedÚlimitÚoffsetztotal events found: )r    Ú
+get_eventsÚextendÚlenr"   ) r-   Úcontr7   r8   r.   ÚparamsÚbatchs           r   r*   r*   X   sˆ   € Ü	Ó	€BØ
+€DØ€EØ
+€FØ
+€FÙ
+àØØØØñ
+
+ˆğ —
+‘
+˜fÓ%ˆØ
+‰
+eÔÜ
+ˆu‹:˜Ò
+ØˆDØ˜%‘ˆò 
+ô 
+Ğ
+ ¤# f£+Ô.Ø
+€Mr   Ú	market_idc           
+      óê  — t        «       }|j                  | «      }i d|j                  d«      “d|j                  d«      “d|j                  d«      “d|j                  d«      “d|j                  d«      “d|j                  d«      “d |j                  d «      “d|j                  d«      “d	|j                  d	«      “d
+|j                  d
+«      “d
+|j                  d
+«      “d|j                  d«      “d
+|j                  d
+«      “d|j                  d«      “d|j                  d«      “d|j                  d«      “d|j                  d«      “|j                  d«      |j                  d«      |j                  d«      |j                  d«      |j                  d«      |j                  d«      |j                  d«      |j                  d«      |j                  d«      |j                  d«      dœ
+¥}|S )Nr'   ÚquestionÚ	startDateÚ endDateÚ
+descriptionÚoutcomesÚ
+outcomePricesÚvolumeÚorderPriceMinTickSizeÚorderMinSizeÚ	volumeNumÚliquidityNumÚcommentsEnabledÚ
+volume24hrÚclobTokenIdsÚvolume24hrClobÚ
+volumeClobÚ
+liquidityClobÚ umaBondÚ	umaRewardÚrewardsMinSizeÚrewardsMaxSpreadÚspreadÚoneDayPriceChangeÚlastTradePriceÚ bestBidÚ bestAsk)
+rQ   rR   rS   rT   rU   rV   rW   rX   rY   rZ   )r    Ú
+get_marketr,   )r?   r-   Úmarketr   s       r   Úget_market_infor]   o   s  € Ü	Ó	€BØ
+]‰]˜9Ó
+%€FğØˆfj‰j˜ÓğàF—J‘J˜zÓ*ğğ 	V—Z‘Z 
+Ó,ğ ğ 	6—:‘:˜iÓ(ğ	ğ
+ 	v—z‘z -Ó0ğ
+ğ 	F—J‘J˜zÓ*ğ
+ğ 	˜Ÿ™ OÓ4ğğ 	&—*‘*˜XÓ&ğğ 	  §¡Ğ,CÓ!Dğğ 	˜Ÿ
+™
+ >Ó2ğğ 	V—Z‘Z 
+Ó,ğğ 	˜Ÿ
+™
+ >Ó2ğğ 	˜6Ÿ:™:Ğ&7Ó8ğğ 	f—j‘j Ó.ğğ 	˜Ÿ
+™
+ >Ó2ğğ  	˜&Ÿ*™*Ğ%5Ó6ğ!ğ" 	f—j‘j Ó.ğ#ğ$  Ÿ™ OÓ4Ø—:‘:˜iÓ(Ø—Z‘Z 
+Ó,Ø Ÿ*™*Ğ%5Ó6Ø"ŸJ™JĞ'9Ó:Ø—*‘*˜XÓ&Ø#ŸZ™ZĞ(;Ó<Ø Ÿ*™*Ğ%5Ó6Ø—:‘:˜iÓ(Ø—:‘:˜iÓ(ò7€Kğ: Ğr   c           
+      óæ  — t        t        | «      «      }|dk(  ryt        «       }|j                   d|i¬«      }|d   }|j	                  d«      |j	                  d«      |j	                  d«      |j	                  d «      |j	                  d«      |j	                  d	«      |j	                  d
+«      |j	                  d
+«      |j	                  d«      d
+œ	}g }t
+        | |«      } |j
+                  dd| dœ«       |j	                  d«      }|D ][  }	t        |	j	                  d«      «      }
+t
+        | |
+«      }
+|j
+                  |
+j	                  d«      |
+j	                  d«      |
+dœ«       Œ] t        | |«      }|S )Nr   z#Sorry, can't find relevant markets.r'   )Úquerystring_paramsr(   rB   rC   rD   rG   rM   Ú	liquidityrQ   )	r'   r(   rB   rC   rD   rG   rM   r`   rQ   z
+EVENT OVERALL)r'   r(   Ú summaryÚ marketsrA   )	Úintr1   r    r9   r,   r   r+   r]   r%   )
+r
+   Úevent_idr-   r.   r0   Ú
+event_infoÚmarkets_analycitsÚevent_analysisrb   r\   r   Úmarket_analysisr   s
+                r   Ú composeri   ’   sW  € ÜÔ% jÓ1Ó2€HØ 1‚}Ø4Ü	Ó	€BØ
+]‰]¨t°XĞ.>ˆ]Ó
+?€FØ1‰I€Eài‰i˜‹oØ—‘˜7Ó#Ø—Y‘Y˜{Ó+Ø—9‘9˜YÓ'Ø—y‘y Ó/Ø—)‘)˜HÓ%Ø—i‘i Ó-Ø—Y‘Y˜{Ó+ØŸ™ ?Ó3ñ
+€Jğ Ğä˜j¨*Ó5€NØ×Ñ A°ÈNÑ[Ô\ài‰i˜	Ó"€GÛˆÜ% f§j¡j°Ó&6Ó7ˆ
+Ü" :¨{Ó;ˆØ× Ñ ¨
+¯©¸Ó(=È
+ÏÉĞXbÓHcĞpñ  "Aõ  	Bğ  ô
+ ˜
+Ğ$5Ó
+6€FØ
+€Mr   )ÚosÚlangchain_openair   Úlangchain_core.messagesr   r   Ú%message_handler.polymarket.polymarketr   Ú message_handler.polymarket.gammar    Úmessage_handler.utils.objectsr   r   Úastr	   Útypingr
+   Ú environr   r   ÚstrÚdictr   r%   rc   r1   r*   r]   ri   © r   r   Ú<module>rv      sÁ   ğã 	İ 'ß ?İ <İ >İ 9Û 
+İ İ ğ  F€‡
+
+Ğ
+Ñ ğ€
+ñ 	˜Ô'€ğ˜ğ ¨4ğ °Có ğ˜3ğ ¨4°©:ó ğ2 3ğ ¨3ó ğ2  _Ñ 5ó ğ. ˜sğ   tó  ğF˜ğ  ô r   
